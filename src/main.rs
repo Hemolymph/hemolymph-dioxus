@@ -2,7 +2,7 @@ mod backend;
 mod components;
 mod router;
 
-use components::{CardDetails, Results, SearchBar};
+use components::{CardDetails, Results};
 use dioxus::prelude::*;
 use router::Route;
 

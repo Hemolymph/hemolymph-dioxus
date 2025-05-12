@@ -4,10 +4,18 @@ use crate::{backend::process_query, components::CardView, router::Route, Query};
 
 #[component]
 pub fn Results(query: String) -> Element {
+    let mut ctx = consume_context::<Query>();
+    use_effect(move || {
+        if query != *ctx.query.read() {
+            if !query.trim().is_empty() {
+                ctx.has_been_filled.set(true);
+            }
+            ctx.query.set(query.clone());
+        }
+    });
     let search = use_resource(move || {
-        let thing = consume_context::<Query>();
-        let thing = thing.query.read();
-        process_query(thing.clone())
+        let query = ctx.query.read();
+        process_query(query.clone())
     });
 
     match &*search.value().read() {

@@ -3,7 +3,7 @@ use hemoglobin::cards::Card;
 
 #[component]
 pub fn CardView(card: Card) -> Element {
-    let image = get_filegarden_link(&card.name);
+    let image = get_filegarden_link(&card.get_image_path(0));
     rsx! {
         div {
             class: "card_result",
