@@ -42,3 +42,10 @@ fn App() -> Element {
         Router::<Route> {}
     }
 }
+
+fn get_filegarden_link(name: &str) -> String {
+    format!(
+        "https://file.garden/ZJSEzoaUL3bz8vYK/bloodlesscards/{}.png",
+        name.replace(' ', "").replace('ä', "a")
+    )
+}
