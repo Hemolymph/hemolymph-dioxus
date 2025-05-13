@@ -147,13 +147,13 @@ body {
 }
 
 .search-box.top img {
-  max-width: 10%;
+  max-width: 150px;
   height: auto;
-  margin: auto auto 0
+  margin: auto;
 }
 
 .search-box.home img {
-  max-width: 20%;
+  max-width: 300px;
   height: auto;
   margin: auto auto 0
 }
@@ -231,4 +231,24 @@ hr {
 
 .card_details_text h2 {
   margin-bottom: 10px;
+}
+
+#logo.small {
+  display: none;
+}
+
+#logo.large {
+  display: block;
+}
+
+@media (max-width: 550px) {
+  #logo.large {
+    display: none;
+  }
+
+  #logo.small {
+    display: block;
+    width: 36px;
+    margin: auto;
+  }
 }

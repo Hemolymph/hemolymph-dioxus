@@ -32,9 +32,22 @@ pub fn SearchBar() -> Element {
     rsx! {
         div {
             class: "search-box {class}",
-            img {
-                id: "logo",
-                src: "https://file.garden/ZJSEzoaUL3bz8vYK/hemolymphlogo.png",
+            if class == "top" {
+                img {
+                    id: "logo",
+                    class: "large",
+                    src: "https://file.garden/ZJSEzoaUL3bz8vYK/hemolymphlogo.png",
+                }
+                img {
+                    id: "logo",
+                    class: "small",
+                    src: "https://file.garden/ZJSEzoaUL3bz8vYK/hemolymph_icon.png",
+                }
+            } else {
+                img {
+                    id: "logo",
+                    src: "https://file.garden/ZJSEzoaUL3bz8vYK/hemolymphlogo.png",
+                }
             }
             input {
                 key: "search-bar",
