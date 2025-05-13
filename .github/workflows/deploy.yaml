@@ -15,12 +15,12 @@ jobs:
 
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
-
-      - name: Install wasm target
-        run: rustup target add wasm32-unknown-unknown
-
-      - name: Install dioxus-cli
-        run: cargo install dioxus-cli
+        with: 
+          targets: wasm32-unknown-unknown
+        
+      - uses: brndnmtthws/rust-action-cargo-binstall@v1
+        with:
+          packages: dioxus-cli
 
       - name: Bundle the app
         run: dx build --platform web
