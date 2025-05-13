@@ -1,9 +1,10 @@
 [application]
+out_dir = "dist"
 
 [web.app]
 
 # HTML title tag content
-title = "hemolymph2"
+title = "Hemolymph"
 
 # include `assets` in web platform
 [web.resource]

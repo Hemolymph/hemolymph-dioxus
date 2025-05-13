@@ -5,10 +5,10 @@ mod router;
 use components::{CardDetails, Results};
 use dioxus::prelude::*;
 use router::Route;
+use server_fn::client::set_server_url;
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
 const MAIN_CSS: Asset = asset!("/assets/main.css");
-const HEADER_SVG: Asset = asset!("/assets/header.svg");
 const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
 
 #[cfg(not(debug_assertions))]
@@ -18,6 +18,7 @@ static HOST: &'static str = "https://hemolymph.net";
 pub static HOST: &str = "http://127.0.0.1:8080";
 
 fn main() {
+    set_server_url(HOST);
     dioxus::launch(App);
 }
 
