@@ -33,3 +33,14 @@ inherits = "dev"
 
 [profile.android-dev]
 inherits = "dev"
+
+[profile.wasm-release]
+inherits = "release"
+opt-level = "z"
+debug-assertions = false
+debug = false
+lto = true
+codegen-units = 1
+strip = "symbols"
+panic = "abort"
+incremental = false
