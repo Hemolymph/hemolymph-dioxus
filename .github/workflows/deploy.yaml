@@ -23,7 +23,7 @@ jobs:
           packages: dioxus-cli
 
       - name: Bundle the app
-        run: dx build --platform web
+        run: dx build --platform server --profile wasm-release
 
       - name: Upload bundle artifact
         uses: actions/upload-artifact@v4
