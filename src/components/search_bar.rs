@@ -10,9 +10,9 @@ pub fn SearchBar() -> Element {
     let mut context = use_context::<Query>();
     let mut query_debounce = use_debounce(Duration::from_millis(400), move |query: String| {
         context.query.set(query.clone());
-        if !query.trim().is_empty() {
-            context.has_been_filled.set(true);
-        }
+        // if !query.trim().is_empty() {
+        //     context.has_been_filled.set(true);
+        // }
         navigator.push(Route::Results { query });
     });
     let mut empty_query_debounce =
@@ -33,15 +33,21 @@ pub fn SearchBar() -> Element {
         div {
             class: "search-box {class}",
             if class == "top" {
-                img {
+                Link {
+                    to: Route::Main,
                     id: "logo",
                     class: "large",
-                    src: "https://file.garden/ZJSEzoaUL3bz8vYK/hemolymphlogo.png",
+                    img {
+                        src: "https://file.garden/ZJSEzoaUL3bz8vYK/hemolymphlogo.png",
+                    }
                 }
-                img {
+                Link {
+                    to: Route::Main,
                     id: "logo",
                     class: "small",
-                    src: "https://file.garden/ZJSEzoaUL3bz8vYK/hemolymph_icon.png",
+                    img {
+                        src: "https://file.garden/ZJSEzoaUL3bz8vYK/hemolymph_icon.png",
+                    }
                 }
             } else {
                 img {
@@ -61,6 +67,13 @@ pub fn SearchBar() -> Element {
                     empty_query_debounce.action(value.clone());
                     query_debounce.action(value);
                 }
+            }
+        }
+        div {
+            class: "horizontal {class}",
+            Link {
+                to: Route::Instructions {},
+                span { "Syntax Guide" }
             }
         }
         Outlet::<Route> {}

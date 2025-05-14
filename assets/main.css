@@ -101,13 +101,17 @@ body {
 }
 
 .card_result {
-  border: 3px solid #000;
-  border-radius: 10px;
   width: 200px
 }
 
+.card_result button {
+  margin: auto;
+}
+
 .card_result_img {
-  width: 100%
+  width: 100%;
+  border: 3px solid #000;
+  border-radius: 10px;
 }
 
 .results {
@@ -122,7 +126,8 @@ body {
   gap: 12px;
   margin-left: auto;
   margin-right: auto;
-  display: flex
+  display: flex;
+  padding-bottom: 20px;
 }
 
 .search-box.home {
@@ -134,7 +139,7 @@ body {
 
 .search-box.top {
   flex-direction: row;
-  padding-bottom: 20px
+  /* padding-bottom: 10px; */
 }
 
 .search-box.top input[type=text] {
@@ -250,8 +255,73 @@ hr {
   }
 
   #logo.small {
-    width: 36px;
+    width: 30px;
     margin: auto;
     display: block
   }
+
+  #logo img {
+    width: 100%;
+  }
+}
+
+a.hemolink:link {
+  color: #fcd305;
+  font-weight: bold;
+  text-decoration: none;
+  background-color: #774d15;
+  padding: 1px 3px 1px 3px;
+  /* margin: -1px -3px -1px -3px; */
+  border-radius: 3px;
+}
+
+a.hemolink:visited {
+  color: #fcd305;
+  font-weight: bold;
+  text-decoration: none;
+  background-color: #774d15;
+  padding: 1px 3px 1px 3px;
+  /* margin: -1px -3px -1px -3px; */
+  border-radius: 3px;
+}
+
+a.hemolink:hover {
+  color: #fce885;
+  background-color: #91671e;
+}
+
+.horizontal a:link {
+  font-weight: bold;
+  text-decoration: none;
+  color: #d9eafc;
+  background-color: #525a8e;
+  padding: 3px 5px 3px 5px;
+  border-radius: 3px;
+}
+
+.horizontal a:visited {
+  font-weight: bold;
+  text-decoration: none;
+  color: #d9eafc;
+  background-color: #525a8e;
+  padding: 3px 5px 3px 5px;
+  border-radius: 3px;
+}
+
+.horizontal a:hover {
+  color: #f4fafc;
+  background-color: #727aaf;
+}
+
+.horizontal.home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+code {
+  color: #f2f2f2;
+  background-color: #5d636d;
+  padding: 3px 5px 3px 5px;
+  border-radius: 3px;
 }

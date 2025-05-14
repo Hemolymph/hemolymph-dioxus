@@ -1,10 +1,14 @@
 use dioxus::prelude::*;
 use hemoglobin::cards::rich_text::{RichElement, RichString};
 
-use crate::{backend, get_filegarden_link, router::Route, Query};
+use crate::{
+    backend,
+    components::{CardHemolink, CardView, QueryHemolink},
+    get_filegarden_link, Query,
+};
 
 #[component]
-pub fn CardDetails(id: String) -> Element {
+pub fn CardDetails(id: String, img_idx: usize) -> Element {
     let card = use_resource(move || backend::get_card_id(id.clone()));
 
     use_effect(move || {
@@ -14,7 +18,7 @@ pub fn CardDetails(id: String) -> Element {
 
     match &*card.value().read() {
         Some(Ok(card)) => {
-            let img = get_filegarden_link(&card.get_image_path(0));
+            let img = get_filegarden_link(&card.get_image_path(img_idx));
             let text = render_rich_string(&card.description);
             let kind = get_ascii_titlecase(&card.r#type);
             let flavor_text: Vec<_> = card
@@ -30,6 +34,8 @@ pub fn CardDetails(id: String) -> Element {
                     }
                 })
                 .collect();
+
+            let alternates = card.images.len();
             rsx! {
                 // Main {}
                 div {
@@ -61,6 +67,14 @@ pub fn CardDetails(id: String) -> Element {
                         }
                     }
                 }
+                if alternates > 1 {
+                    div {
+                        class: "results",
+                        for img_idx in 0..alternates {
+                            CardView { card: card.clone(), img_idx }
+                        }
+                    }
+                }
             }
         }
         Some(Err(err)) => rsx! {
@@ -72,6 +86,11 @@ pub fn CardDetails(id: String) -> Element {
             "Loading"
         },
     }
+}
+
+#[component]
+pub fn CardDetailSimple(id: String) -> Element {
+    rsx! { CardDetails { id, img_idx: 0 }}
 }
 
 fn render_rich_string(string: &RichString) -> Element {
@@ -122,16 +141,26 @@ fn render_rich_string(string: &RichString) -> Element {
                     identity: _,
                 } => rsx! { "{display}" },
                 RichElement::SpecificCard { display, id } => rsx! {
-                    Link {
-                        to: Route::CardDetails { id: id.clone() },
-                        "{display}"
+                    CardHemolink {
+                        display: display.clone(),
+                        card_id: id.clone(),
                     }
+                    // Link {
+                    //     to: Route::CardDetailSimple { id: id.clone() },
+                    //     class: "hemolink",
+                    //     "{display}"
+                    // }
                 },
                 RichElement::CardSearch { display, search } => rsx! {
-                    Link {
-                        to: Route::Results { query: search.clone() } ,
-                        "{display}"
+                    QueryHemolink {
+                        display: display.clone(),
+                        query: search.clone(),
                     }
+                    // Link {
+                    //     to: Route::Results { query: search.clone() } ,
+                    //     class: "hemolink",
+                    //     "{display}"
+                    // }
                 },
                 RichElement::Saga(list) => {
                     let list = list.iter().map(render_rich_string);
