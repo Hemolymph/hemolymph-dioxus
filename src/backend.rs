@@ -16,7 +16,7 @@ thread_local! {
     };
 }
 
-#[server]
+#[server(endpoint = "search")]
 pub async fn process_query(query: String) -> Result<Vec<Card>, ServerFnError> {
     if query.trim().is_empty() {
         return Ok(vec![]);
@@ -35,7 +35,7 @@ pub async fn process_query(query: String) -> Result<Vec<Card>, ServerFnError> {
     Ok(cards)
 }
 
-#[server]
+#[server(endpoint = "card")]
 pub async fn get_card_id(id: String) -> Result<Card, ServerFnError> {
     CARDS.with(|cards| {
         cards
