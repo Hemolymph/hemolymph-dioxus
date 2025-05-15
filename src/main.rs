@@ -7,7 +7,7 @@ use dioxus::prelude::*;
 use router::Route;
 use server_fn::client::set_server_url;
 
-const FAVICON: Asset = asset!("/assets/favicon.ico");
+const FAVICON: Asset = asset!("/assets/hemo_icon.ico");
 const MAIN_CSS: Asset = asset!("/assets/main.css");
 const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
 
