@@ -166,7 +166,8 @@ body {
   flex-direction: column;
   max-width: 100%;
   margin: auto;
-  display: flex
+  padding-top: 10px;
+  display: flex;
 }
 
 .card_details_text {

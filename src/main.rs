@@ -18,6 +18,10 @@ static HOST: &'static str = "https://hemolymph.net";
 pub static HOST: &str = "http://127.0.0.1:8080";
 
 fn main() {
+    #[cfg(feature = "server")]
+    {
+        backend::setup_card_debounce();
+    }
     set_server_url(HOST);
     dioxus::launch(App);
 }
