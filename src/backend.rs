@@ -23,12 +23,12 @@ pub async fn process_query(query: String) -> Result<Vec<Card>, ServerFnError> {
         return Ok(vec![]);
     }
 
-    let query_s = hemoglobin::search::query_parser::parse_query(&query);
+    let query_s = hemoglobin_search::query_parser::parse_query(&query);
     let query =
         query_s.map_err(|x| ServerFnError::new(format!("Failed to parse query: {x:#?}")))?;
     let cards: Vec<_> = {
         let cards = CARDS.read().unwrap();
-        hemoglobin::search::search(&query, cards.values())
+        hemoglobin_search::search(&query, cards.values())
             .into_iter()
             .cloned()
             .collect()

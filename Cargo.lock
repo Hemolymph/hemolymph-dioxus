@@ -2304,16 +2304,22 @@ checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 
 [[package]]
 name = "hemoglobin"
-version = "0.8.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8cc7e557e792a73f3b1e8122e4c5d9a9665eed0b5d2ed4756609d8758661f723"
+version = "0.9.0"
 dependencies = [
- "chumsky",
  "getrandom 0.3.3",
  "regex",
- "rust-fuzzy-search",
  "serde",
  "serde_regex",
+]
+
+[[package]]
+name = "hemoglobin-search"
+version = "0.1.0"
+dependencies = [
+ "chumsky",
+ "hemoglobin",
+ "regex",
+ "rust-fuzzy-search",
 ]
 
 [[package]]
@@ -2323,6 +2329,7 @@ dependencies = [
  "dioxus",
  "dioxus-sdk",
  "hemoglobin",
+ "hemoglobin-search",
  "js-sys",
  "notify",
  "notify-debouncer-mini",
