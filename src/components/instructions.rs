@@ -221,7 +221,7 @@ fn QueryQuery() -> Element {
                 Examples {
                     examples: [
                         ("devs: (c>2)", "all cards that devour cards with cost greater than 2"),
-                        ("dby: (mantis c>2)", "all cards devoured by cards with cost greater than 2 that also have the word mantis written on them"),
+                        ("dby: (mantis c>2)", "all cards devoured by cards with cost greater than 2 and have the word mantis written on them"),
                     ]
                 }
             }
@@ -273,7 +273,7 @@ fn Negation() -> Element {
             }
             Examples {
                 examples: [
-                    ("-h=2", "all cards whose cost is not equal to 2"),
+                    ("- h=2", "all cards whose cost is not equal to 2"),
                 ]
             }
             p {

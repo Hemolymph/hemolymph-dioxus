@@ -176,11 +176,10 @@ body {
 }
 
 .instructions {
-  width: 50%;
-  margin: 0 auto 0 auto;
+  margin: 10px auto 0 auto;
   color: #161511;
   background-color: #fcfbf4;
-  padding: 20px 10% 10px 10%;
+  padding: 5px 5% 10px 5%;
 }
 
 @media (min-width:600px) {
@@ -211,6 +210,11 @@ body {
   .search-box.home {
     width: 70%;
   }
+
+  .instructions {
+    width: 80%;
+    padding: 20px 10% 10px 10%;
+  }
 }
 
 @media (min-width:1200px) {
@@ -218,6 +222,10 @@ body {
     flex-direction: row;
     align-items: stretch;
     width: 60%
+  }
+
+  .instructions {
+    width: 50%;
   }
 }
 
