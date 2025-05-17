@@ -175,6 +175,14 @@ body {
   padding: 0 16px
 }
 
+.instructions {
+  width: 50%;
+  margin: 0 auto 0 auto;
+  color: #161511;
+  background-color: #fcfbf4;
+  padding: 20px 10% 10px 10%;
+}
+
 @media (min-width:600px) {
   .card_details {
     flex-direction: row;
@@ -271,8 +279,8 @@ a.hemolink:link {
   font-weight: bold;
   text-decoration: none;
   background-color: #774d15;
-  padding: 1px 3px 1px 3px;
-  /* margin: -1px -3px -1px -3px; */
+  padding: 1px 6px 1px 6px;
+  /* margin: -1px -6px -1px -6px; */
   border-radius: 3px;
 }
 
@@ -281,7 +289,7 @@ a.hemolink:visited {
   font-weight: bold;
   text-decoration: none;
   background-color: #774d15;
-  padding: 1px 3px 1px 3px;
+  padding: 1px 6px 1px 6px;
   /* margin: -1px -3px -1px -3px; */
   border-radius: 3px;
 }
@@ -325,4 +333,44 @@ code {
   background-color: #5d636d;
   padding: 3px 5px 3px 5px;
   border-radius: 3px;
+}
+
+table td,
+table th {
+  padding: 3px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table td,
+table th {
+  border: 1px solid black;
+}
+
+table tr:first-child th {
+  border-top: 0;
+}
+
+table tr:last-child td {
+  border-bottom: 0;
+}
+
+table tr td:first-child,
+table tr th:first-child {
+  border-left: 0;
+}
+
+table tr td:last-child,
+table tr th:last-child {
+  border-right: 0;
+}
+
+.instructions h2 {
+  margin-top: 0px;
+}
+
+.instructions hr {
+  margin-top: 20px;
 }

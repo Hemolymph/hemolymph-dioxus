@@ -10,16 +10,62 @@ pub fn Instructions() -> Element {
     });
     rsx! {
         section {
+            class: "instructions",
             h1 {
                 "Hemolymph Syntax Guide"
             }
-            "All the examples in this guide are clickable. They are written in bold text and yellow, like all the clickable search queries in Hemolymph."
+            p { "Hemolymph provides more advanced syntax to make searches. Each individual meaningful element of a search is called a query. Two or more queries put together one after another will only retrieve results that match all of them." }
+            p { "All the examples in this guide are clickable. They are written in bold text and yellow, like all the clickable search queries in Hemolymph." }
+            hr {}
+            FuzzyQuery { }
+            hr {}
             StringQuery { }
+            hr {}
+            KinQuery { }
+            hr {}
             NumberQuery { }
+            hr {}
             QueryQuery { }
+            hr {}
             OrAndXor { }
+            hr {}
             Negation { }
+            hr {}
             Sorting { }
+        }
+    }
+}
+
+#[component]
+fn FuzzyQuery() -> Element {
+    rsx! {
+        section {
+            h2 {
+                "Basic Queries"
+            }
+            p {
+                "A basic query consists of unstructured text, and will match all text in a card excluding flavor text. It prioritizes matches in this order."
+            }
+            ol {
+                li { "Names" }
+                li { "Kins" }
+                li { "Keywords" }
+                li { "Description" }
+                li { "Type line" }
+            }
+            p {
+                "All basic queries inside a single query group will be put together as one."
+            }
+            section {
+                h3 {
+                    "Examples"
+                }
+                Examples {
+                    examples: [
+                        ("dr vats", r#"all cards that contain the text "dr vats" anywhere"#),
+                    ]
+                }
+            }
         }
     }
 }
@@ -34,7 +80,12 @@ fn StringQuery() -> Element {
             p {
                 "You can match all string properties in a card. Here are some aliases for certain properties:"
             }
-            ul {
+            table {
+                class: "aliases",
+                tr {
+                    th { "Property" }
+                    th { "Aliases" }
+                }
                 NameAlias { property: "name", aliases: ["n"] }
                 NameAlias { property: "description", aliases: ["desc"] }
                 NameAlias { property: "kin", aliases: ["k"] }
@@ -42,11 +93,64 @@ fn StringQuery() -> Element {
                 NameAlias { property: "flavortext", aliases: ["ft"] }
             }
             StringQueryEqualityNotice { }
-            Examples {
-                examples: [
-                    ("n:ant", "all cards with \"ant\" in their name"),
-                    ("n=\"lost man\"", "all cards named exactly \"lost man\""),
-                ]
+            section {
+                h3 {
+                    "Examples"
+                }
+                Examples {
+                    examples: [
+                        ("n:ant", "all cards with \"ant\" in their name"),
+                        ("n=\"lost man\"", "all cards named exactly \"lost man\""),
+                        ("n=/.*/", "all cards whose name matches the regex /.*/"),
+                    ]
+                }
+            }
+        }
+    }
+}
+
+#[component]
+fn KinQuery() -> Element {
+    rsx! {
+        section {
+            h2 {
+                "Kin Queries"
+            }
+            p {
+                "Kin queries are similar to text queries, but are aware of the kin tree whenever you type a fully recognized kin."
+            }
+            p {
+                "If your query has more than one word, you must use double quotes ("
+                code { "\"" }
+                ") around it."
+            }
+            p {
+                "Using a colon ("
+                code { ":" }
+                ") will retrieve any result of the same kin that you're looking for, respecting the Kin Tree, whereas an equals sign ("
+                code { "=" }
+                ") will match only results that are "
+                em { "exactly"}
+                " of the kin you're searching. Most of the time, you want to use a colon."
+            }
+            p {
+                "If the string you look for is not recognized as a kin, the search will be interpreted as a text query instead. You can also use a Regex."
+            }
+
+
+            section {
+                h3 {
+                    "Examples"
+                }
+                Examples {
+                    examples: [
+                        ("k:ant", "all ant kin cards" ),
+                        ("k:insect", "all insect kin cards" ),
+                        ("k=insect", "all cards of exactly insect kin" ),
+                        ("k=sorc", r#"all cards whose kin is equal to the string "sorc""# ),
+                        (r#"k:"blue k""#, r#"all cards whose kin contains the string "blue k""# ),
+                    ]
+                }
             }
         }
     }
@@ -62,19 +166,29 @@ fn NumberQuery() -> Element {
             p {
                 "You can match all number properties in a card."
             }
-            ul {
+            table {
+                class: "aliases",
+                tr {
+                    th { "Property" }
+                    th { "Aliases" }
+                }
                 NameAlias { property: "cost", aliases: ["c"] }
                 NameAlias { property: "health", aliases: ["h"] }
                 NameAlias { property: "defense", aliases: ["d"] }
                 NameAlias { property: "power", aliases: ["p"] }
             }
 
-            Examples {
-                examples: [
-                    ("c>3", "all cards with cost greater than 3"),
-                    ("d!=2", "all cards with defense different from 2"),
-                    ("p<=2", "all cards with power less than or equal to 2"),
-                ]
+            section {
+                h3 {
+                    "Examples"
+                }
+                Examples {
+                    examples: [
+                        ("c>3", "all cards with cost greater than 3"),
+                        ("d!=2", "all cards with defense different from 2"),
+                        ("p<=2", "all cards with power less than or equal to 2"),
+                    ]
+                }
             }
         }
     }
@@ -88,18 +202,28 @@ fn QueryQuery() -> Element {
                 "Recursive Queries"
             }
             p {
-                "The following properties are matched another query, which is written in parentheses:"
+                "The following properties are matched by another query group, which is written in parentheses:"
             }
-            ul {
+            table {
+                class: "aliases",
+                tr {
+                    th { "Property" }
+                    th { "Aliases" }
+                }
                 NameAlias { property: "devours", aliases: ["devs"] }
                 NameAlias { property: "devouredby", aliases: ["dby"] }
             }
 
-            Examples {
-                examples: [
-                    ("devs: (c>2)", "all cards that devour cards with cost greater than 2"),
-                    ("dby: (mantis c>2)", "all cards devoured by cards with cost greater than 2 that also have the word mantis written on them"),
-                ]
+            section {
+                h3 {
+                    "Examples"
+                }
+                Examples {
+                    examples: [
+                        ("devs: (c>2)", "all cards that devour cards with cost greater than 2"),
+                        ("dby: (mantis c>2)", "all cards devoured by cards with cost greater than 2 that also have the word mantis written on them"),
+                    ]
+                }
             }
         }
     }
@@ -113,7 +237,7 @@ fn OrAndXor() -> Element {
                 "OR and XOR"
             }
             p {
-                "You can match cards that match one query or another using OR"
+                "You can match cards that match one query group or another using OR"
             }
             Examples {
                 examples: [
@@ -182,13 +306,18 @@ fn Sorting() -> Element {
                 "Sorting"
             }
             p {
-                "You can put a SORT clause in the outermost query of your search."
+                "You can put a SORT clause in the outermost query group of your search. If no SORT clause is put, results will be sorted alphabetically, unless there is a basic query in the outermost query group. In that case they will be sorted by how closely they match the basic query."
             }
-            Examples {
-                examples: [
-                    ("p=2 SORT c ascending", "all cards with power=2, sorted by cost, ascending"),
-                    ("d=3 h=1 SORT n descending", "all cards with defense=3, health=2, sorted alphabetically by name, descending"),
-                ]
+            section {
+                h3 {
+                    "Examples"
+                }
+                Examples {
+                    examples: [
+                        ("p=2 SORT c ascending", "all cards with power=2, sorted by cost, ascending"),
+                        ("d=3 h=1 SORT n descending", "all cards with defense=3, health=2, sorted alphabetically by name, descending"),
+                    ]
+                }
             }
         }
     }
@@ -225,18 +354,14 @@ fn NameAlias<const N: usize>(property: &'static str, aliases: [&'static str; N])
         .reduce(|acc, el| rsx! { {acc} "," {el} });
 
     let alias_text = match aliases {
-        Some(aliases) => rsx! {
-            "has the following aliases: "
-            {aliases}
-        },
-        None => rsx! {"has no aliases."},
+        Some(aliases) => aliases,
+        None => rsx! { "None." },
     };
 
     rsx! {
-        li {
-            code { "{property}" }
-            " "
-            { alias_text }
+        tr {
+            td { code { "{property}" } }
+            td { { alias_text } }
         }
     }
 }
@@ -245,14 +370,22 @@ fn NameAlias<const N: usize>(property: &'static str, aliases: [&'static str; N])
 fn Examples<const N: usize>(examples: [(&'static str, &'static str); N]) -> Element {
     let examples = examples;
     rsx! {
-        ul {
+        table {
+            class: "examples",
+            tr {
+                th { "Query" }
+                th { "Will match..." }
+            }
             for idx in 0..N {
-                li {
-                    QueryHemolink {
-                        query: "{examples[idx].0}", display: "{examples[idx].0}"
+                tr {
+                    td {
+                        QueryHemolink {
+                            query: "{examples[idx].0}", display: "{examples[idx].0}"
+                        }
                     }
-                    " will match "
-                    i { "{examples[idx].1}" }
+                    td {
+                        i { "{examples[idx].1}" }
+                    }
                 }
             }
         }

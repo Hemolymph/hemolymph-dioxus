@@ -23,7 +23,7 @@ pub fn Results(query: String) -> Element {
                  }
              }
         },
-        Some(Err(err)) => rsx! {"failed to do search"},
+        Some(Err(err)) => rsx! {"failed to do search: {err}"},
         None => rsx! {"Loading..."},
     }
 }

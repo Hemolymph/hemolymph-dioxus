@@ -79,7 +79,7 @@ pub fn CardDetails(id: String, img_idx: usize) -> Element {
         }
         Some(Err(err)) => rsx! {
             // Main {}
-            "Error while loading card details"
+            "Error while loading card details: {err}"
         },
         None => rsx! {
             // Main {}
