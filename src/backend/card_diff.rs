@@ -9,6 +9,6 @@ pub static CARD_CHANGED: Global<Vec<CardDiff>> =
     LazyLock::new(|| Arc::new(RwLock::new(Vec::new())));
 
 pub enum CardDiff {
-    Changed(Box<Card>, Box<Card>),
+    Changed { old: Box<Card>, new: Box<Card> },
     New(Box<Card>),
 }

@@ -1,4 +1,4 @@
-// mod card_diff;
+mod card_diff;
 use notify::RecursiveMode;
 use notify_debouncer_mini::{new_debouncer, DebounceEventResult};
 use std::fmt::Debug;
@@ -116,31 +116,31 @@ fn watcher_response(events: DebounceEventResult) {
 
 #[cfg(feature = "server")]
 fn load_cards_json() -> Result<(), LoadError> {
-    // use card_diff::{CardDiff, CARD_CHANGED};
+    use card_diff::{CardDiff, CARD_CHANGED};
 
     match fs::read_to_string("../hemolymph-static/files/cards.json") {
         Ok(data) => match serde_json::from_str::<Vec<Card>>(&data) {
             Ok(data) => {
                 let new_map = create_card_map(data);
-                // let cards = CARDS.read().unwrap();
-                // for (id, new_card) in &new_map {
-                //     match cards.get(id) {
-                //         Some(old_card) => {
-                //             if new_card != old_card {
-                //                 let mut cards_changed = CARD_CHANGED.write().unwrap();
-                //                 cards_changed.push(CardDiff::Changed(
-                //                     Box::new(old_card.clone()),
-                //                     Box::new(new_card.clone()),
-                //                 ));
-                //             }
-                //         }
-                //         None => {
-                //             let mut cards_changed = CARD_CHANGED.write().unwrap();
-                //             cards_changed.push(CardDiff::New(Box::new(new_card.clone())));
-                //         }
-                //     }
-                // }
                 let mut cards = CARDS.write().unwrap();
+                for (id, new_card) in &new_map {
+                    match cards.get(id) {
+                        Some(old_card) => {
+                            if new_card == old_card {
+                                continue;
+                            }
+                            let mut cards_changed = CARD_CHANGED.write().unwrap();
+                            cards_changed.push(CardDiff::Changed {
+                                old: Box::new(old_card.clone()),
+                                new: Box::new(new_card.clone()),
+                            });
+                        }
+                        None => {
+                            let mut cards_changed = CARD_CHANGED.write().unwrap();
+                            cards_changed.push(CardDiff::New(Box::new(new_card.clone())));
+                        }
+                    }
+                }
                 *cards = new_map;
                 Ok(())
             }
