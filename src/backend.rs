@@ -1,3 +1,4 @@
+mod card_diff;
 use notify::RecursiveMode;
 use notify_debouncer_mini::{new_debouncer, DebounceEventResult};
 use std::fmt::Debug;
@@ -13,8 +14,10 @@ use std::{
 use dioxus::prelude::*;
 use hemoglobin::cards::Card;
 
+type Global<T> = LazyLock<Arc<RwLock<T>>>;
+
 #[cfg(feature = "server")]
-pub static CARDS: LazyLock<Arc<RwLock<HashMap<String, Card>>>> =
+pub static CARDS: Global<HashMap<String, Card>> =
     LazyLock::new(|| Arc::new(RwLock::new(HashMap::new())));
 
 #[server(endpoint = "search")]
@@ -93,17 +96,16 @@ fn watcher_response(events: DebounceEventResult) {
     match events {
         Ok(events) => {
             for event in events {
-                if event.path.ends_with("cards.json") {
-                    match load_cards_json() {
-                        Ok(()) => println!("Successfully reloaded cards.json"),
-                        Err(LoadError::IoError(err)) => {
-                            eprintln!(
-                                "Failed to read cards.json: {err:#?} from disk after debounce"
-                            )
-                        }
-                        Err(LoadError::SerdeJsonError(err)) => {
-                            eprintln!("Failed to deserialize cards.json: {err:#?} after debounce")
-                        }
+                if !event.path.ends_with("cards.json") {
+                    return;
+                }
+                match load_cards_json() {
+                    Ok(()) => println!("Successfully reloaded cards.json"),
+                    Err(LoadError::IoError(err)) => {
+                        eprintln!("Failed to read cards.json: {err:#?} from disk after debounce")
+                    }
+                    Err(LoadError::SerdeJsonError(err)) => {
+                        eprintln!("Failed to deserialize cards.json: {err:#?} after debounce")
                     }
                 }
             }
@@ -114,11 +116,32 @@ fn watcher_response(events: DebounceEventResult) {
 
 #[cfg(feature = "server")]
 fn load_cards_json() -> Result<(), LoadError> {
+    use card_diff::{CardDiff, CARD_CHANGED};
+
     match fs::read_to_string("../hemolymph-static/files/cards.json") {
         Ok(data) => match serde_json::from_str::<Vec<Card>>(&data) {
             Ok(data) => {
+                let new_map = create_card_map(data);
+                let cards = CARDS.read().unwrap();
+                for (id, new_card) in &new_map {
+                    match cards.get(id) {
+                        Some(old_card) => {
+                            if new_card != old_card {
+                                let mut cards_changed = CARD_CHANGED.write().unwrap();
+                                cards_changed.push(CardDiff::Changed(
+                                    Box::new(old_card.clone()),
+                                    Box::new(new_card.clone()),
+                                ));
+                            }
+                        }
+                        None => {
+                            let mut cards_changed = CARD_CHANGED.write().unwrap();
+                            cards_changed.push(CardDiff::New(Box::new(new_card.clone())));
+                        }
+                    }
+                }
                 let mut cards = CARDS.write().unwrap();
-                *cards = create_card_map(data);
+                *cards = new_map;
                 Ok(())
             }
             Err(x) => Err(LoadError::SerdeJsonError(x)),

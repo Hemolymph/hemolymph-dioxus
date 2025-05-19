@@ -210,7 +210,21 @@ fn QueryQuery() -> Element {
                     th { "Property" }
                     th { "Aliases" }
                 }
-                NameAlias { property: "devours", aliases: ["devs"] }
+                NameAlias { property: "devours", aliases: ["dev"] }
+                NameAlias { property: "devouredby", aliases: ["dby"] }
+            }
+            p {
+                "You can match "
+                code { "devours" }
+                " with a colon to match by the restriction written the card, and an equals sign to match by the actual cards. The examples should clarify this distinction."
+            }
+            table {
+                class: "aliases",
+                tr {
+                    th { "Property" }
+                    th { "Aliases" }
+                }
+                NameAlias { property: "devours", aliases: ["dev"] }
                 NameAlias { property: "devouredby", aliases: ["dby"] }
             }
 
@@ -220,7 +234,8 @@ fn QueryQuery() -> Element {
                 }
                 Examples {
                     examples: [
-                        ("devs: (c>2)", "all cards that devour cards with cost greater than 2"),
+                        ("dev: (c>2)", "all cards said to devour cards with cost greater than 2"),
+                        ("dev=(c>2)", "all cards that devour any card with cost greater than 2"),
                         ("dby: (mantis c>2)", "all cards devoured by cards with cost greater than 2 and have the word mantis written on them"),
                     ]
                 }
