@@ -1,6 +1,10 @@
 mod card_diff;
+pub use card_diff::CardDiff;
+#[cfg(feature = "server")]
+use card_diff::CARD_CHANGED;
 use notify::RecursiveMode;
 use notify_debouncer_mini::{new_debouncer, DebounceEventResult};
+use std::collections::VecDeque;
 use std::fmt::Debug;
 use std::path::Path;
 use std::sync::LazyLock;
@@ -46,7 +50,7 @@ pub async fn get_card_id(id: String) -> Result<Card, ServerFnError> {
         .read()
         .unwrap()
         .get(&id)
-        .ok_or(ServerFnError::new("Id does not exist"))
+        .ok_or_else(|| ServerFnError::new("Id does not exist"))
         .cloned()
 }
 
@@ -59,7 +63,7 @@ fn create_card_map(vec: Vec<Card>) -> HashMap<String, Card> {
 pub fn setup_card_debounce() {
     use std::thread::sleep;
 
-    match load_cards_json() {
+    match load_cards_json(false) {
         Ok(()) => println!("Successful first load of cards.json"),
         Err(LoadError::IoError(err)) => {
             eprintln!("Failed to read cards.json: {err:#?} from disk on first initialization")
@@ -99,7 +103,7 @@ fn watcher_response(events: DebounceEventResult) {
                 if !event.path.ends_with("cards.json") {
                     return;
                 }
-                match load_cards_json() {
+                match load_cards_json(true) {
                     Ok(()) => println!("Successfully reloaded cards.json"),
                     Err(LoadError::IoError(err)) => {
                         eprintln!("Failed to read cards.json: {err:#?} from disk after debounce")
@@ -115,7 +119,7 @@ fn watcher_response(events: DebounceEventResult) {
 }
 
 #[cfg(feature = "server")]
-fn load_cards_json() -> Result<(), LoadError> {
+fn load_cards_json(generate_changes: bool) -> Result<(), LoadError> {
     use card_diff::{CardDiff, CARD_CHANGED};
 
     match fs::read_to_string("../hemolymph-static/files/cards.json") {
@@ -123,29 +127,34 @@ fn load_cards_json() -> Result<(), LoadError> {
             Ok(data) => {
                 let new_map = create_card_map(data);
                 let mut cards = CARDS.write().unwrap();
-                for (id, new_card) in &new_map {
-                    match cards.get(id) {
-                        Some(old_card) => {
+                if generate_changes {
+                    for (id, new_card) in &new_map {
+                        if let Some(old_card) = cards.get(id) {
                             if new_card == old_card {
                                 continue;
                             }
                             let mut cards_changed = CARD_CHANGED.write().unwrap();
-                            cards_changed.push(CardDiff::Changed {
+                            cards_changed.push_front(CardDiff::Changed {
                                 old: Box::new(old_card.clone()),
                                 new: Box::new(new_card.clone()),
                             });
-                        }
-                        None => {
+                        } else {
                             let mut cards_changed = CARD_CHANGED.write().unwrap();
-                            cards_changed.push(CardDiff::New(Box::new(new_card.clone())));
+                            cards_changed.push_front(CardDiff::New(Box::new(new_card.clone())));
                         }
                     }
                 }
                 *cards = new_map;
+                drop(cards);
                 Ok(())
             }
             Err(x) => Err(LoadError::SerdeJsonError(x)),
         },
         Err(x) => Err(LoadError::IoError(x)),
     }
+}
+
+#[server(endpoint = "changes")]
+pub async fn card_changes() -> Result<VecDeque<CardDiff>, ServerFnError> {
+    Ok(CARD_CHANGED.read().unwrap().clone())
 }

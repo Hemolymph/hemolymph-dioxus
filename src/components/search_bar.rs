@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 use dioxus_sdk::utils::timing::use_debounce;
 use std::time::Duration;
 
-use crate::{router::Route, Query};
+use crate::{components::ChangeList, router::Route, Query};
 
 #[component]
 pub fn SearchBar() -> Element {
@@ -24,15 +24,15 @@ pub fn SearchBar() -> Element {
             }
         });
 
-    let has_been_filled = context.has_been_filled.read();
-    let class = if *has_been_filled { "top" } else { "home" };
+    let top_position = context.has_been_filled.read();
+    let class = if *top_position { "top" } else { "home" };
 
     let query = context.query.read();
 
     rsx! {
         div {
             class: "search-box {class}",
-            if class == "top" {
+            if *top_position {
                 Link {
                     to: Route::Main,
                     id: "logo",
@@ -77,5 +77,8 @@ pub fn SearchBar() -> Element {
             }
         }
         Outlet::<Route> {}
+        if !*top_position {
+            ChangeList {}
+        }
     }
 }

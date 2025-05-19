@@ -382,3 +382,45 @@ table tr th:last-child {
 .instructions hr {
   margin-top: 20px;
 }
+
+.card_change {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  flex: 0 0 100%;
+}
+
+.card_change_title {
+  margin: 0 auto 0 auto;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.change_list {
+  margin-top: 30%;
+  display: flex;
+  overflow: scroll;
+  flex-flow: row;
+  scrollbar-color: rgba(0, 0, 0, 0);
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.change_list::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width:550px) {
+  .change_list {
+    margin: auto;
+    width: 90%;
+    margin-top: 30%;
+    display: flex;
+    overflow: show;
+    flex-flow: column;
+    scrollbar-color: rgba(0, 0, 0, 0);
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

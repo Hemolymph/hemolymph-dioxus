@@ -368,10 +368,7 @@ fn NameAlias<const N: usize>(property: &'static str, aliases: [&'static str; N])
         .map(|x| rsx! { code { "{x}" } })
         .reduce(|acc, el| rsx! { {acc} "," {el} });
 
-    let alias_text = match aliases {
-        Some(aliases) => aliases,
-        None => rsx! { "None." },
-    };
+    let alias_text = aliases.map_or_else(|| rsx! { "None." }, |aliases| aliases);
 
     rsx! {
         tr {

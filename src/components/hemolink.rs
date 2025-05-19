@@ -17,7 +17,7 @@ pub fn CardHemolink(display: String, card_id: String) -> Element {
 pub fn QueryHemolink(display: String, query: String) -> Element {
     rsx! {
         Link {
-            to: Route::Results { query: query.clone() } ,
+            to: Route::Results { query } ,
             class: "hemolink",
             "{display}"
         }

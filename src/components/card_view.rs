@@ -24,7 +24,7 @@ pub fn CardView(card: Card, img_idx: usize) -> Element {
         div {
             class: "card_result",
             Link {
-                to: Route::CardDetails { id: card.id.clone(), img_idx },
+                to: Route::CardDetails { id: card.id, img_idx },
                 img {
                     class: "card_result_img",
                     src: "{image}",
