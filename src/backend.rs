@@ -101,7 +101,7 @@ fn watcher_response(events: DebounceEventResult) {
         Ok(events) => {
             for event in events {
                 if !event.path.ends_with("cards.json") {
-                    return;
+                    continue;
                 }
                 match load_cards_json(true) {
                     Ok(()) => println!("Successfully reloaded cards.json"),
@@ -112,6 +112,7 @@ fn watcher_response(events: DebounceEventResult) {
                         eprintln!("Failed to deserialize cards.json: {err:#?} after debounce")
                     }
                 }
+                break;
             }
         }
         Err(error) => eprintln!("Failed to watch: {error:#?}"),
@@ -126,8 +127,8 @@ fn load_cards_json(generate_changes: bool) -> Result<(), LoadError> {
         Ok(data) => match serde_json::from_str::<Vec<Card>>(&data) {
             Ok(data) => {
                 let new_map = create_card_map(data);
-                let mut cards = CARDS.write().unwrap();
                 if generate_changes {
+                    let cards = CARDS.write().unwrap();
                     for (id, new_card) in &new_map {
                         if let Some(old_card) = cards.get(id) {
                             if new_card == old_card {
@@ -144,6 +145,7 @@ fn load_cards_json(generate_changes: bool) -> Result<(), LoadError> {
                         }
                     }
                 }
+                let mut cards = CARDS.write().unwrap();
                 *cards = new_map;
                 drop(cards);
                 Ok(())
