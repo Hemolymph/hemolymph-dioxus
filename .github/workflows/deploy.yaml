@@ -22,6 +22,10 @@ jobs:
       - uses: brndnmtthws/rust-action-cargo-binstall@v1
         with:
           packages: dioxus-cli
+          
+      - uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: "build"
 
       - name: Bundle the app
         run: dx bundle --platform web --profile wasm-release
