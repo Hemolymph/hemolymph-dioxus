@@ -75,6 +75,10 @@ pub fn SearchBar() -> Element {
                 to: Route::Instructions {},
                 span { "Syntax Guide" }
             }
+            Link {
+                to: Route::Lore {},
+                span { "Stories & Lore" }
+            }
         }
         Outlet::<Route> {}
         if !*top_position {

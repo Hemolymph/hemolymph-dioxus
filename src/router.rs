@@ -4,6 +4,7 @@ use crate::components::SearchBar;
 use crate::CardDetails;
 use crate::Query;
 use crate::Results;
+use crate::Lore;
 use dioxus::prelude::*;
 
 #[derive(Routable, Clone, PartialEq)]
@@ -19,6 +20,8 @@ pub enum Route {
     CardDetails { id: String, img_idx: usize },
     #[route("/syntax")]
     Instructions {},
+    #[route("/lore")]
+    Lore {},
 }
 
 #[component]

@@ -182,6 +182,50 @@ body {
   padding: 5px 5% 10px 5%;
 }
 
+.instructions p {
+  font-size: 13pt;
+}
+
+.dark h1 {
+  color: #aaffff;
+  font-size: 30px;
+}
+
+.dark h2 {
+  color: #ccffff;
+}
+
+.dark a:link {
+  text-decoration: underline solid;
+  font-weight: bold;
+  color: #cefeac;
+}
+
+.dark a:visited {
+  font-weight: bold;
+  color: #a6d9a9;
+}
+
+.dark a:hover {
+  color: #c9daac;
+}
+
+.dark {
+  background-color: #102a2a;
+  color: #f2f5ff;
+}
+
+.side {
+  float: left;
+  width: 30%;
+  padding: 10px;
+  margin-right: 15px;
+}
+
+.stories li {
+  padding-bottom: 10px;
+}
+
 @media (min-width:600px) {
   .card_details {
     flex-direction: row;
@@ -305,6 +349,10 @@ a.hemolink:visited {
 a.hemolink:hover {
   color: #fce885;
   background-color: #91671e;
+}
+
+.horizontal a:not(:last-child) {
+  margin-right: 10px;
 }
 
 .horizontal a:link {

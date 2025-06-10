@@ -5,6 +5,7 @@ mod hemolink;
 mod instructions;
 mod results;
 mod search_bar;
+mod lore;
 
 pub use card_view::*;
 pub use changes::*;
@@ -13,3 +14,4 @@ pub use hemolink::*;
 pub use instructions::*;
 pub use results::*;
 pub use search_bar::*;
+pub use lore::*;

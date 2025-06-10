@@ -6,7 +6,7 @@ mod backend;
 mod components;
 mod router;
 
-use components::{CardDetails, CardHemolink, QueryHemolink, Results};
+use components::{CardDetails, CardHemolink, QueryHemolink, Results, Lore};
 use dioxus::prelude::*;
 use hemoglobin::cards::rich_text::{RichElement, RichString};
 use router::Route;
