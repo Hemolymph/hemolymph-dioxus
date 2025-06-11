@@ -79,6 +79,16 @@ pub fn SearchBar() -> Element {
                 to: Route::Lore {},
                 span { "Stories & Lore" }
             }
+            a {
+                href: "https://github.com/Hemolymph",
+                target: "_blank",
+                span { "Github" }
+            }
+            a {
+                href: "https://discord.gg/3gqsp3ejjX",
+                target: "_blank",
+                span { "Discord Server" }
+            }
         }
         Outlet::<Route> {}
         if !*top_position {
