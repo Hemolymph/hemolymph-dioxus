@@ -362,6 +362,7 @@ a.hemolink:hover {
   background-color: #525a8e;
   padding: 3px 5px 3px 5px;
   border-radius: 3px;
+  text-align: center;
 }
 
 .horizontal a:visited {
@@ -371,11 +372,13 @@ a.hemolink:hover {
   background-color: #525a8e;
   padding: 3px 5px 3px 5px;
   border-radius: 3px;
+  text-align: center;
 }
 
 .horizontal a:hover {
   color: #f4fafc;
   background-color: #727aaf;
+  text-align: center;
 }
 
 .horizontal.home {
