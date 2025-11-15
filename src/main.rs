@@ -6,11 +6,11 @@ mod backend;
 mod components;
 mod router;
 
-use components::{CardDetails, CardHemolink, QueryHemolink, Results, Lore};
+use components::{CardDetails, CardHemolink, Lore, QueryHemolink, Results};
+use dioxus::fullstack::set_server_url;
 use dioxus::prelude::*;
 use hemoglobin::cards::rich_text::{RichElement, RichString};
 use router::Route;
-use dioxus::fullstack::set_server_url;
 
 const FAVICON: Asset = asset!("/assets/hemo_icon.ico");
 const MAIN_CSS: Asset = asset!("/assets/main.css");
@@ -28,7 +28,9 @@ fn main() {
         backend::setup_card_debounce();
     }
     #[cfg(not(feature = "server"))]
-    {set_server_url(HOST);}
+    {
+        set_server_url(HOST);
+    }
     dioxus::launch(App);
 }
 
@@ -156,6 +158,9 @@ fn render_rich_string(string: &RichString) -> Element {
                 }
             } }
         })
+        .reduce(|acc, el| rsx! { {acc} {el}})
+        .unwrap_or(rsx! {})
+}
         .reduce(|acc, el| rsx! { {acc} {el}})
         .unwrap_or(rsx! {})
 }
