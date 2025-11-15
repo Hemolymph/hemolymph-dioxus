@@ -161,6 +161,3 @@ fn render_rich_string(string: &RichString) -> Element {
         .reduce(|acc, el| rsx! { {acc} {el}})
         .unwrap_or(rsx! {})
 }
-        .reduce(|acc, el| rsx! { {acc} {el}})
-        .unwrap_or(rsx! {})
-}
