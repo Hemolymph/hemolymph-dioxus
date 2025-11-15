@@ -10,7 +10,7 @@ use components::{CardDetails, CardHemolink, QueryHemolink, Results, Lore};
 use dioxus::prelude::*;
 use hemoglobin::cards::rich_text::{RichElement, RichString};
 use router::Route;
-use server_fn::client::set_server_url;
+use dioxus::fullstack::set_server_url;
 
 const FAVICON: Asset = asset!("/assets/hemo_icon.ico");
 const MAIN_CSS: Asset = asset!("/assets/main.css");
@@ -27,7 +27,8 @@ fn main() {
     {
         backend::setup_card_debounce();
     }
-    set_server_url(HOST);
+    #[cfg(not(feature = "server"))]
+    {set_server_url(HOST);}
     dioxus::launch(App);
 }
 

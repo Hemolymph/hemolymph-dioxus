@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use dioxus_sdk::utils::timing::use_debounce;
+use dioxus_sdk::time::use_debounce;
 use std::time::Duration;
 
 use crate::{components::ChangeList, router::Route, Query};
