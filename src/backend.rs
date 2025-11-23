@@ -24,7 +24,7 @@ type Global<T> = LazyLock<Arc<RwLock<T>>>;
 pub static CARDS: Global<HashMap<String, Card>> =
     LazyLock::new(|| Arc::new(RwLock::new(HashMap::new())));
 
-#[get("/search")]
+#[get("/search?query")]
 pub async fn process_query(query: String) -> Result<Vec<Card>, ServerFnError> {
     if query.trim().is_empty() {
         return Ok(vec![]);
@@ -44,7 +44,7 @@ pub async fn process_query(query: String) -> Result<Vec<Card>, ServerFnError> {
     Ok(cards)
 }
 
-#[get("/card")]
+#[get("/card?id")]
 pub async fn get_card_id(id: String) -> Result<Card, ServerFnError> {
     CARDS
         .read()
