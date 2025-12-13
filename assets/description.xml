@@ -5,5 +5,5 @@
   <Description>Search through Bloodless cards.</Description>
   <InputEncoding>UTF-8</InputEncoding>
   <Url type="text/html" template="https://hemolymph.net/{searchTerms}"/>
-  <Url type="application/x-suggestions+json" template="https://hemolymph.net/suggest/{searchTerms}"/>
+  <Url type="application/x-suggestions+json" template="https://hemolymph.net/suggest?query={searchTerms}"/>
 </OpenSearchDescription>
