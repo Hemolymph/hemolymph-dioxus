@@ -44,6 +44,38 @@ pub async fn process_query(query: String) -> Result<Vec<Card>, ServerFnError> {
     Ok(cards)
 }
 
+#[get("/suggest?query")]
+pub async fn process_suggest(
+    query: String,
+) -> Result<(String, Vec<String>, Vec<String>, Vec<String>), ServerFnError> {
+    let mut completions = vec![];
+    let mut descriptions = vec![];
+    let mut urls = vec![];
+
+    if query.trim().is_empty() {
+        let suggestions = (query, completions, descriptions, urls);
+
+        return Ok(suggestions);
+    }
+
+    let query_s = hemoglobin_search::query_parser::parse_query(&query);
+    let query_s =
+        query_s.map_err(|x| ServerFnError::new(format!("Failed to parse query: {x:#?}")))?;
+
+    let cards = CARDS.read().unwrap();
+    let matches = hemoglobin_search::search(&query_s, cards.values());
+
+    for card in matches {
+        completions.push(card.name.clone());
+        descriptions.push(card.description.to_string());
+        urls.push(format!("https://hemolymph.net/card/{}/0", card.id));
+    }
+
+    let suggestions = (query, completions, descriptions, urls);
+
+    Ok(suggestions)
+}
+
 #[get("/card?id")]
 pub async fn get_card_id(id: String) -> Result<Card, ServerFnError> {
     CARDS

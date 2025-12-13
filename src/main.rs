@@ -15,6 +15,7 @@ use router::Route;
 const FAVICON: Asset = asset!("/assets/hemo_icon.ico");
 const MAIN_CSS: Asset = asset!("/assets/main.css");
 const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
+const OPENSEARCH: Asset = asset!("/assets/description.xml");
 
 #[cfg(not(debug_assertions))]
 static HOST: &'static str = "https://hemolymph.net";
@@ -50,6 +51,7 @@ fn App() -> Element {
     });
 
     rsx! {
+        document::Link { rel: "search", type: "application/opensearchdescription+xml", title: "Hemolymph", href: OPENSEARCH }
         document::Link { rel: "icon", href: FAVICON }
         document::Link { rel: "stylesheet", href: MAIN_CSS } document::Link { rel: "stylesheet", href: TAILWIND_CSS }
         Router::<Route> {}
