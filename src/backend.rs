@@ -46,7 +46,7 @@ pub async fn process_query(query: String) -> Result<Vec<Card>, ServerFnError> {
     Ok(cards)
 }
 
-// #[get("/suggest?query")]
+#[cfg(feature = "server")]
 pub async fn process_suggest(Query(query): Query<HashMap<String, String>>) -> Response {
     let Some(query) = query.get("query") else {
         return Response::builder()
