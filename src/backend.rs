@@ -2,6 +2,8 @@ mod card_diff;
 pub use card_diff::CardDiff;
 #[cfg(feature = "server")]
 use card_diff::CARD_CHANGED;
+use dioxus::fullstack::response::Response;
+use dioxus::fullstack::Query;
 use notify::RecursiveMode;
 use notify_debouncer_mini::{new_debouncer, DebounceEventResult};
 use std::collections::VecDeque;
@@ -44,10 +46,14 @@ pub async fn process_query(query: String) -> Result<Vec<Card>, ServerFnError> {
     Ok(cards)
 }
 
-#[get("/suggest?query")]
-pub async fn process_suggest(
-    query: String,
-) -> Result<(String, Vec<String>, Vec<String>, Vec<String>), ServerFnError> {
+// #[get("/suggest?query")]
+pub async fn process_suggest(Query(query): Query<HashMap<String, String>>) -> Response {
+    let Some(query) = query.get("query") else {
+        return Response::builder()
+            .status(StatusCode::BAD_REQUEST)
+            .body("Lacking a request".into())
+            .unwrap();
+    };
     let mut completions = vec![];
     let mut descriptions = vec![];
     let mut urls = vec![];
@@ -55,12 +61,23 @@ pub async fn process_suggest(
     if query.trim().is_empty() {
         let suggestions = (query, completions, descriptions, urls);
 
-        return Ok(suggestions);
+        return Response::builder()
+            .status(StatusCode::OK)
+            .header("Content-Type", "application/x-suggestions+json")
+            .body(serde_json::to_string(&suggestions).unwrap().into())
+            .unwrap();
     }
 
-    let query_s = hemoglobin_search::query_parser::parse_query(&query);
-    let query_s =
-        query_s.map_err(|x| ServerFnError::new(format!("Failed to parse query: {x:#?}")))?;
+    let query_s = hemoglobin_search::query_parser::parse_query(query);
+    let query_s = match query_s {
+        Ok(ok) => ok,
+        Err(err) => {
+            return Response::builder()
+                .status(StatusCode::BAD_REQUEST)
+                .body("Couldn't parse.".into())
+                .unwrap()
+        }
+    };
 
     let cards = CARDS.read().unwrap();
     let matches = hemoglobin_search::search(&query_s, cards.values());
@@ -73,7 +90,11 @@ pub async fn process_suggest(
 
     let suggestions = (query, completions, descriptions, urls);
 
-    Ok(suggestions)
+    Response::builder()
+        .status(StatusCode::OK)
+        .header("Content-Type", "application/x-suggestions+json")
+        .body(serde_json::to_string(&suggestions).unwrap().into())
+        .unwrap()
 }
 
 #[get("/card?id")]

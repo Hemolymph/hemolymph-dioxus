@@ -7,7 +7,7 @@ mod components;
 mod router;
 
 use components::{CardDetails, CardHemolink, Lore, QueryHemolink, Results};
-use dioxus::fullstack::set_server_url;
+use dioxus::fullstack::{routing, set_server_url};
 use dioxus::prelude::*;
 use hemoglobin::cards::rich_text::{RichElement, RichString};
 use router::Route;
@@ -32,7 +32,17 @@ fn main() {
     {
         set_server_url(HOST);
     }
+
+    #[cfg(not(feature = "server"))]
     dioxus::launch(App);
+
+    #[cfg(feature = "server")]
+    dioxus::serve(|| async move {
+        let router =
+            dioxus::server::router(App).route("/suggest", routing::get(backend::process_suggest));
+
+        Ok(router)
+    });
 }
 
 #[derive(Clone)]
