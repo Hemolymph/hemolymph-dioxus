@@ -20,12 +20,16 @@ pub fn CardView(card: Card, img_idx: usize) -> Element {
             }
         });
     };
+    let id = card.id.clone();
     rsx! {
         div {
+            key: "{id}_div",
             class: "card_result",
             Link {
+                key: "{id}_link",
                 to: Route::CardDetails { id: card.id, img_idx },
                 img {
+                    key: "{id}_img",
                     class: "card_result_img",
                     src: "{image}",
                 }
