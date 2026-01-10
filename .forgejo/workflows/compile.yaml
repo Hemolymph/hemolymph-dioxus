@@ -1,0 +1,24 @@
+name: Compile TSC
+
+on: [push, workflow_dispatch]
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    if: (forgejo.ref == 'refs/heads/master' || fogejo.ref == 'refs/heads/static') && forgejo.event_name != 'pull_request'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Compile Typescript
+      uses: https://github.com/iCrawl/action-tsc@v1
+
+    - name: Upload artifact
+      uses: forgejo/upload-artifact@v3
+      with:
+        name: webpage
+        path: |
+          main.html
+          main.css
+          hemoglobin
+          dist

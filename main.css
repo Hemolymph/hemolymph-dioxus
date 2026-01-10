@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+body {
+  font-family: "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+#search {
+  width: 60%;
+  height: 2.5em;
+  margin: auto;
+}
+
+#search-form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+#results {
+  display: flex;
+  flex-direction: row;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.result-img {
+  width: 2.49in;
+  border-radius: 10pt;
+}
+
+#display-left {
+  width: 3.735in;
+  border-radius: 10pt;
+}
+
+#display-right {
+  width: 3.735in;
+  padding-left: 10pt;
+  min-height: 3.735in;
+}
+
+.result {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4pt;
+}
+
+#display {
+  display: flex;
+  flex-direction: row;
+  flex-flow: row wrap;
+  justify-content: center;
+  margin-top: 2em;
+}
+
+#display-desc p {
+  margin-bottom: 0.2em;
+  margin-top: 0.2em;
+}
+
+#display-name {
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 0em;
+  margin-top: 0em;
+}
+
+.result-btn {
+  padding: 0;
+  background: none;
+  border: 0;
+}
+
+.result-btn:hover {
+  cursor: pointer;
+}
+
+.hemolink:hover {
+  cursor: alias;
+}
+
+#display-flavor {
+  font-style: italic;
+}
