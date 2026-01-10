@@ -50,7 +50,10 @@ pub fn CardDetailSimple(id: String) -> Element {
 #[component]
 pub fn CardDetailsView(card: Card, img_idx: usize) -> Element {
     let img = get_filegarden_link(&card.get_image_path(img_idx));
-    let text = render_rich_string(&card.description);
+    let text = render_rich_string(
+        &redcell::parse(&card.description_formatted)
+            .expect("Server delivered malformed card description"),
+    );
     let kind = get_ascii_titlecase(&card.r#type);
     let flavor_text: Vec<_> = card
         .flavor_text

@@ -6,10 +6,10 @@ mod backend;
 mod components;
 mod router;
 
-use components::{CardDetails, CardHemolink, Lore, QueryHemolink, Results};
+use components::{CardDetails, Lore, QueryHemolink, Results};
 use dioxus::fullstack::{routing, set_server_url};
 use dioxus::prelude::*;
-use hemoglobin::cards::rich_text::{RichElement, RichString};
+use redcell::{RichElement, RichString};
 use router::Route;
 
 const FAVICON: Asset = asset!("/assets/hemo_icon.ico");
@@ -85,7 +85,7 @@ fn get_ascii_titlecase(s: &str) -> String {
 
 fn render_rich_string(string: &RichString) -> Element {
     let mut paragraphs = vec![];
-    for element in string {
+    for element in &string.elements {
         match element {
             RichElement::String(string) => {
                 if paragraphs.is_empty() {
@@ -104,17 +104,12 @@ fn render_rich_string(string: &RichString) -> Element {
                     paragraphs.push(vec![RichElement::String(line.to_string())]);
                 }
             }
-            el @ (RichElement::CardId {
-                display: _,
-                identity: _,
-            }
-            | RichElement::SpecificCard { display: _, id: _ }
-            | RichElement::CardSearch {
+            RichElement::CardSearch {
                 display: _,
                 search: _,
-            }) => match paragraphs.last_mut() {
-                Some(last) => last.push(el.clone()),
-                None => paragraphs.push(vec![el.clone()]),
+            } => match paragraphs.last_mut() {
+                Some(last) => last.push(element.clone()),
+                None => paragraphs.push(vec![element.clone()]),
             },
             el @ RichElement::Saga(_) => paragraphs.push(vec![el.clone()]),
             RichElement::LineBreak => paragraphs.push(vec![]),
@@ -126,21 +121,6 @@ fn render_rich_string(string: &RichString) -> Element {
         .map(|x| {
             let x = x.iter().map(|x| match x {
                 RichElement::String(string) => rsx! {"{string}"},
-                RichElement::CardId {
-                    display,
-                    identity: _,
-                } => rsx! { "{display}" },
-                RichElement::SpecificCard { display, id } => rsx! {
-                    CardHemolink {
-                        display: display.clone(),
-                        card_id: id.clone(),
-                    }
-                    // Link {
-                    //     to: Route::CardDetailSimple { id: id.clone() },
-                    //     class: "hemolink",
-                    //     "{display}"
-                    // }
-                },
                 RichElement::CardSearch { display, search } => rsx! {
                     QueryHemolink {
                         display: display.clone(),
